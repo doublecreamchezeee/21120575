@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchPhotos } from '../utils/unsplashApi';
-import { Box, Grid, Typography, CircularProgress, Card, CardMedia, CardContent } from '@mui/material';
+import { Box, Grid, Typography, CircularProgress, Card, CardMedia, CardContent } from '@mui/material'; // Material UI components
 
 const PhotoList = () => {
-  const [photos, setPhotos] = useState([]);
-  const [page, setPage] = useState(1);
+  const [photos, setPhotos] = useState([]); 
+  const [page, setPage] = useState(1); 
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(true); 
 
   const loadMorePhotos = async () => {
-    setLoading(true);
-    const response = await fetchPhotos(page);
-    if (response.data.length === 0) setHasMore(false);
-    setPhotos([...photos, ...response.data]);
-    setLoading(false);
-    setPage(page + 1);
+    setLoading(true); 
+    const response = await fetchPhotos(page); 
+    if (response.data.length === 0) setHasMore(false); // Stop loading if no more photos are available
+    setPhotos([...photos, ...response.data]); // Append new photos to the current list
+    setLoading(false); 
+    setPage(page + 1); // Increment page for the next fetch
   };
 
   useEffect(() => {
-    loadMorePhotos();
+    loadMorePhotos(); // Fetch initial photos when component mounts
   }, []);
 
+  // Infinite scrolling functionality
   window.onscroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && hasMore && !loading) {
-      loadMorePhotos();
+      loadMorePhotos(); 
     }
   };
 
@@ -44,13 +45,13 @@ const PhotoList = () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={photo.urls.thumb}
+                  image={photo.urls.thumb} 
                   alt={photo.alt_description}
-                  sx={{ borderRadius: '12px 12px 0 0' }}
+                  sx={{ borderRadius: '12px 12px 0 0' }} 
                 />
                 <CardContent>
                   <Typography variant="subtitle1" color="textPrimary" gutterBottom>
-                    {photo.user.name}
+                    {photo.user.name} {/* Display the photo's author */}
                   </Typography>
                 </CardContent>
               </Card>
@@ -62,14 +63,14 @@ const PhotoList = () => {
       {/* Loading indicator */}
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-          <CircularProgress />
+          <CircularProgress /> {/* Show loading spinner while fetching more photos */}
         </Box>
       )}
 
       {/* End of photos message */}
       {!hasMore && (
         <Typography variant="body1" align="center" sx={{ marginTop: '20px', color: 'gray' }}>
-          No more photos to load.
+          No more photos to load. {/* Display message when no more photos are available */}
         </Typography>
       )}
     </Box>
